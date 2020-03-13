@@ -16,6 +16,7 @@ class AchievementView {
   final TextStyle textStyleSubTitle;
   final String title;
   final String subTitle;
+   double widthPercent;
 
   OverlayEntry _overlayEntry;
 
@@ -33,19 +34,30 @@ class AchievementView {
     this.color = Colors.blueGrey,
     this.textStyleTitle,
     this.textStyleSubTitle,
-    this.alignment = Alignment.topCenter,
+    this.alignment = Alignment.topRight,
     this.duration = const Duration(seconds: 3),
-    this.title = "My Title",
-    this.subTitle = "My subtitle with max 1 line",
+    this.title = "",
+    this.subTitle = "",
+    this.widthPercent = 40
   });
 
   OverlayEntry _buildOverlay() {
+
     return OverlayEntry(builder: (context) {
+      if(widthPercent>95){
+        widthPercent = 95;
+      }else if(widthPercent<=30){
+        widthPercent = 30;
+      }
+      var size = MediaQuery.of(context).size;
+      var  width = (size.width*widthPercent)/100;
+
       return Align(
         alignment: alignment,
         child: AchievementWidget(
           title: title,
           subTitle: subTitle,
+          width:width,
           duration: duration,
           listener: listener,
           onTab: onTab,

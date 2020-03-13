@@ -27,6 +27,7 @@ class AchievementWidget extends StatefulWidget {
   final TextStyle textStyleSubTitle;
   final String title;
   final String subTitle;
+  final double width;
 
   const AchievementWidget(
       {Key key,
@@ -45,7 +46,8 @@ class AchievementWidget extends StatefulWidget {
       this.textStyleTitle,
       this.textStyleSubTitle,
       this.title = "",
-      this.subTitle = ""})
+      this.subTitle = "",
+      this.width})
       : super(key: key);
 
   @override
@@ -62,7 +64,6 @@ class AchievementWidgetState extends State<AchievementWidget>
   CurvedAnimation _curvedAnimationScale;
 
   AnimationController _controllerSize;
-  CurvedAnimation _curvedAnimationSize;
 
   AnimationController _controllerTitle;
   Animation<Offset> _titleSlideUp;
@@ -96,8 +97,6 @@ class AchievementWidgetState extends State<AchievementWidget>
               _controllerScale.reverse();
             }
           });
-    _curvedAnimationSize =
-        CurvedAnimation(parent: _controllerSize, curve: Curves.ease);
 
     _controllerTitle =
         AnimationController(vsync: this, duration: Duration(milliseconds: 250))
@@ -138,7 +137,7 @@ class AchievementWidgetState extends State<AchievementWidget>
   Widget build(BuildContext context) {
     return SafeArea(
       child: Container(
-        height: HEIGHT_CARD,
+        width: widget.width,
         margin: EdgeInsets.all(MARGIN_CARD),
         child: ScaleTransition(
           scale: _curvedAnimationScale,
@@ -160,9 +159,24 @@ class AchievementWidgetState extends State<AchievementWidget>
           }
         },
         child: Row(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[_buildIcon(), _buildContent()],
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            _buildIcon(),
+            SingleChildScrollView(
+              child: Padding(
+                  padding: _buildPaddingContent(),
+                  child: Container(
+                    width: widget.width - (HEIGHT_CARD + MARGIN_CARD + 40),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Visibility(child:_buildTitle(), visible:widget.title.length>0?true:false),
+                        Visibility(child:_buildSubTitle(), visible:widget.subTitle.length>0?true:false)],
+                    ),
+                  )),
+            ),
+          ],
         ),
       ),
     );
@@ -176,26 +190,6 @@ class AchievementWidgetState extends State<AchievementWidget>
           color: Colors.white.withOpacity(0.2),
           borderRadius: _buildBorderIcon()),
       child: widget.icon,
-    );
-  }
-
-  Widget _buildContent() {
-    return Flexible(
-      child: SizeTransition(
-        sizeFactor: _curvedAnimationSize,
-        axis: Axis.horizontal,
-        child: Padding(
-          padding: _buildPaddingContent(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              _buildTitle(),
-              _buildSubTitle(),
-            ],
-          ),
-        ),
-      ),
     );
   }
 
@@ -234,7 +228,6 @@ class AchievementWidgetState extends State<AchievementWidget>
         },
         child: Text(
           widget.subTitle,
-          maxLines: 1,
           style: TextStyle(color: Colors.white).merge(widget.textStyleSubTitle),
         ));
   }
@@ -258,9 +251,9 @@ class AchievementWidgetState extends State<AchievementWidget>
 
   EdgeInsets _buildPaddingContent() {
     if (widget.isCircle) {
-      return EdgeInsets.only(left: 15.0, right: 25.0);
+      return EdgeInsets.only(left: 15.0, right: 25.0, top: 5, bottom: 5);
     }
-    return EdgeInsets.only(left: 15.0, right: 15.0);
+    return EdgeInsets.only(left: 15.0, right: 15.0, top: 5, bottom: 5);
   }
 
   Animation<Offset> _buildAnimatedContent(AnimationController controller) {

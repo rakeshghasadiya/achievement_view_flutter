@@ -5,8 +5,11 @@ void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
+
+
   @override
   Widget build(BuildContext context) {
+
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -64,8 +67,9 @@ class _MyHomePageState extends State<MyHomePage> {
     AchievementView(
         context,
         title: "Yeaaah!",
-        subTitle: "Training completed successfully",
+        subTitle: "Multiple lines message. Training completed successfully",
         isCircle: isCircle,
+        widthPercent: 90,
         listener: (status){
           print(status);
         }
